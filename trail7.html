@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bharath R - Passfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.5s;
+            position: relative;
+            touch-action: pan-y;
+            background-color: #f5f5f5;
+        }
+        
+        /* Page transition styles */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+            will-change: transform, opacity;
+            background-color: #f5f5f5;
+        }
+        
+        .slide-in {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .slide-out-left {
+            transform: translateX(-100%) scale(0.9);
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        .slide-out-right {
+            transform: translateX(100%) scale(0.9);
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        /* Passfolio content styles */
+        .passport-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #000080;
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        .passport-title {
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .passport-subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+            border: 3px solid #000080;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .detail-row {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            border-radius: 5px;
+            border-left: 4px solid #000080;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #000080;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .stamps-section {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stamp {
+            background: rgba(255, 107, 53, 0.1);
+            border: 2px solid #FF6B35;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            text-align: center;
+            color: #FF6B35;
+            font-weight: bold;
+            text-transform: uppercase;
+            transform: rotate(-10deg);
+            padding: 5px;
+        }
+        .skills-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 30px;
+    }
+    
+    .skills-category {
+        background: rgba(224, 216, 216, 0.8);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .category-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #000080;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stamps-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    
+    
+    .stamp:hover {
+        background: #FF6B35;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+        .stamps-grid {
+            justify-content: center;
+        }
+        
+        .stamp {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+    }
+
+        .stamp:nth-child(even) {
+            transform: rotate(10deg);
+        }
+
+        .experience-grid, .projects-grid {
+            display: grid;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .experience-item, .project-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-left: 6px solid #FF6B35;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .experience-item:nth-child(even) {
+            border-left-color: #F7931E;
+        }
+
+        .experience-item:nth-child(3n) {
+            border-left-color: #000080;
+        }
+
+         .project-item:nth-child(even) {
+            border-left-color: #F7931E;
+        }
+
+        .project-item:nth-child(2n) {
+            border-left-color: #000080;
+        }
+
+        .experience-title, .project-title {
+            font-weight: bold;
+            color: #FF6B35;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .experience-company, .project-tech {
+            font-size: 1.2rem;
+            color: #000080;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .experience-date {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .experience-desc{
+            font-size: 1rem;
+            color: #333;
+            line-height: 2;
+        }
+        .project-desc{
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.5;
+        
+        }
+
+        .contact-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .contact-item:nth-child(even) {
+            border-left-color: #F7931E;
+        }
+
+        .contact-item:nth-child(2n) {
+            border-left-color: #000080;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f9dcd1, #565555);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 0.8rem;
+            color: #212121;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+
+        .contact-value {
+            font-size: 0.9rem;
+            color: #000080;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .linkedin-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #1d7bd9; /* LinkedIn brand color */
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+    }
+    
+    .linkedin-button:hover {
+        background-color: #024166; /* Slightly darker shade */
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .linkedin-button:active {
+        transform: translateY(0);
+        background-color: #005582;
+    }
+    
+    @media (max-width: 768px) {
+        .linkedin-button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    }
+
+      .email-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #D44638; /* Gmail red color */
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+    }
+    
+    .email-button:hover {
+        background-color: #B03C32; /* Slightly darker shade */
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .email-button:active {
+        transform: translateY(0);
+        background-color: #9A3329;
+    }
+    
+    @media (max-width: 768px) {
+        .email-button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    }
+        .github-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #333; /* GitHub dark color */
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+    }
+    
+    .github-button:hover {
+        background-color: #24292e; /* GitHub's dark shade */
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .github-button:active {
+        transform: translateY(0);
+        background-color: #1a1e22;
+    }
+    
+    @media (max-width: 768px) {
+        .github-button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    }
+
+        .location-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #e0e0e3; /* Google Maps blue */
+        color: rgb(14, 14, 14);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+    }
+    
+    .location-button:hover {
+        background-color: #9b9da0; /* Slightly darker blue */
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .location-button:active {
+        transform: translateY(0);
+        background-color: #2A56C6;
+    }
+    
+    @media (max-width: 768px) {
+        .location-button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    }
+
+       .call-button, .whatsapp-button {
+        display: inline-block;
+        padding: 8px 16px;
+        color: rgb(12, 12, 12);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 5px;
+        margin-right: 8px;
+    }
+    
+    .call-button {
+        background-color: #34B7F1; /* Light blue for call */
+    }
+    
+    .whatsapp-button {
+        background-color: #25D366; /* WhatsApp green */
+    }
+    
+    .call-button:hover {
+        background-color: #2CA8E0;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .whatsapp-button:hover {
+        background-color: #21C05B;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .call-button:active, .whatsapp-button:active {
+        transform: translateY(0);
+    }
+    
+    @media (max-width: 768px) {
+        .call-button, .whatsapp-button {
+            padding: 10px 18px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 8px;
+            margin-right: 0;
+            display: block;
+        }
+    }
+
+        .page-number {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 12px;
+            color: #000080;
+            font-weight: bold;
+        }
+
+           .visa-stamp {
+            position: absolute;
+            top: 70px;
+            right: 25px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 107, 53, 0.1);
+            border: 3px solid #FF6B35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #FF6B35;
+            transform: rotate(15deg);
+            font-weight: bold;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+         @keyframes pulse {
+            0%, 100% { transform: rotate(15deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.05); }
+        }
+
+        /* Navigation controls */
+        .navigation {
+            position: fixed;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10;
+            padding: 0 15px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #497dcb;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1;
+            max-width: 120px;
+            transition: background-color 0.2s;
+            touch-action: manipulation;
+        }
+
+        .nav-button:active {
+            background-color: #3a5a8f;
+            transform: scale(0.98);
+        }
+
+        .nav-button:disabled {
+            background-color: #a19e9e;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #scrollIndicator {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            padding: 0 15px;
+        }
+
+        .page-indicators {
+            position: fixed;
+            bottom: 90px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 5;
+        }
+
+        .page-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ccc;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .page-indicator.active {
+            background-color: #4a6fa5;
+        }
+
+        #pageTransition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .profile-section {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            
+            .profile-details {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .contact-section {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .stamp {
+                width: 70px;
+                height: 70px;
+                font-size: 0.8rem;
+            }
+            
+            .nav-button {
+                padding: 12px 24px;
+                max-width: 150px;
+                font-size: 1rem;
+            }
+            
+            #scrollIndicator {
+                bottom: 80px;
+                font-size: 0.9rem;
+            }
+            
+            .page-indicators {
+                bottom: 120px;
+            }
+            
+            .detail-label {
+                font-size: 0.9rem;
+            }
+            
+            .detail-value {
+                font-size: 1rem;
+            }
+        }
+
+        /* Large desktop styles */
+        @media (min-width: 1024px) {
+            .profile-photo {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .experience-grid, .projects-grid, .contact-section {
+                gap: 20px;
+            }
+            
+            .experience-item, .project-item, .contact-item {
+                padding: 20px;
+            }
+        }
+                 /* Airplane animations */
+        @keyframes fly {
+            0% { transform: translateX(-50px) translateY(0) rotate(10deg); }
+            100% { transform: translateX(calc(100vw + 50px)) translateY(-20px) rotate(5deg); }
+        }
+        
+
+        
+        @keyframes fly3 {
+            0% { transform: translateX(-50px) translateY(0) rotate(5deg); }
+            50% { transform: translateX(50vw) translateY(-30px) rotate(0deg); }
+            100% { transform: translateX(calc(100vw + 50px)) translateY(0) rotate(-5deg); }
+        }
+        
+        /* Adjust existing styles for better visibility on background */
+        .passport-title, .passport-subtitle, .category-title, 
+        .detail-label, .detail-value, .visa-stamp {
+            text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .detail-row, .skills-category {
+            background-color: rgba(255,255,255,0.7);
+            backdrop-filter: blur(5px);
+        }
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100px) rotate(-15deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100px)) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideDown2 {
+  0% {
+    transform: translateY(-150px) rotate(10deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 150px)) rotate(-10deg);
+    opacity: 0;
+  }
+}
+@keyframes cloudMove {
+  0% { transform: translateX(-100px); }
+  100% { transform: translateX(calc(100vw + 100px)); }
+}
+@keyframes cloudMove2 {
+  0% { transform: translateX(calc(100vw + 100px)); }
+  100% { transform: translateX(-100px); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+    </style>
+</head>
+<body>
+
+    <div id="pageTransition"></div>
+<div id="page1" class="page slide-in" style="background: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed; background-size: cover; position: relative; min-height: 100vh; overflow-y: auto;">
+    
+    <!-- Semi-transparent overlay for better text visibility -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.85); z-index: 0;"></div>
+    
+    <!-- Content container -->
+    <div style="position: relative; z-index: 1; padding: 20px; padding-bottom: 100px;">
+        <div class="passport-header">
+            <div class="passport-title">Hi there !!</div>
+            <div class="passport-subtitle">Welcome to my Passfolio</div>
+        </div>
+
+        <div class="visa-stamp">HELLO WORLD</div>
+        
+        <div class="profile-section">
+            <div class="profile-photo">
+                <img src="bharathimage.jpg" alt="Profile Photo" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #FF6B35, #F7931E)'; this.parentElement.innerHTML='<span style=color:white;>Photo</span>';">
+            </div>
+            <div class="profile-details">
+                <div class="detail-row">
+                    <div class="detail-label">Name</div>
+                    <div class="detail-value">BHARATH R</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Profession</div>
+                    <div class="detail-value">Associate Software Engineer</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Contact</div>
+                    <div class="detail-value">7305481510</div>
+                    <div class="detail-value">bharathramu1315@gmail.com</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="skills-section">
+            <div class="skills-category">
+                <div class="category-title">Languages</div>
+                <div class="stamps-grid">
+                    <div class="stamp">Python</div>
+                    <div class="stamp">SQL</div>
+                    <div class="stamp">HTML</div>
+                    <div class="stamp">CSS</div>
+                    <div class="stamp">JavaScript</div>
+                </div>
+            </div>
+            
+            <div class="skills-category">
+                <div class="category-title">Data Science</div>
+                <div class="stamps-grid">
+                    <div class="stamp">Machine Learning</div>
+                    <div class="stamp">NumPy</div>
+                    <div class="stamp">Pandas</div>
+                    <div class="stamp">Power BI</div>
+                    <div class="stamp">Excel</div>
+                </div>
+            </div>
+            
+            <div class="skills-category">
+                <div class="category-title">Tools & Frameworks</div>
+                <div class="stamps-grid">
+                    <div class="stamp">Django</div>
+                    <div class="stamp">GitHub</div>
+                    <div class="stamp">Git</div>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <div class="page-number">P001</div>
+    </div>
+    
+    <!-- Page 2: Experience -->
+    <div id="page2" class="page slide-out-right">
+        <div class="passport-header">
+            <div class="passport-title">Professional Experience</div>
+            <div class="passport-subtitle">Career Journey</div>
+        </div>
+        
+        <div class="visa-stamp">EXPERIENCE VERIFIED</div>
+        
+        <div class="experience-grid">
+            <div class="experience-item">
+                <div class="experience-title">Associate Software Engineer</div>
+                <div class="experience-company">T-Machine Software Solutions</div>
+                <div class="experience-date">2025 - Present</div>
+                <div class="experience-desc">
+                    ◦ Completed intensive in-house training in Data Science and Machine Learning, focusing on Python-based tools and frameworks.<br>
+                    ◦ Studied and implemented key libraries such as NumPy, Pandas and Scikit-learn and various machine learning algorithms.<br>
+                    ◦ Participated in regular review meetings with mentors and peers to discuss learning progress and receive feedback.<br>
+                    ◦ Developed independent learning skills and deepened technical knowledge in preparation for future project participation.
+                </div>
+            </div>
+        </div>
+
+         <div class="airplane" style="position: fixed; top: 20%; left: -50px; font-size: 30px; animation: fly 13s linear ; z-index: 2;">✈️</div>
+    <div class="airplane" style="position: fixed; top: 40%; right: 0px; font-size: 30px; animation: fly2 18s linear infinite; z-index: 2;">🌎</div>
+    <div class="airplane" style="position: fixed; top: 70%; left: -50px; font-size: 25px; animation: fly3 5s linear infinite; z-index: 2;">🛩️</div>
+        
+        <div class="page-number">P002</div>
+    </div>
+    
+    <!-- Page 3: Data Science Projects -->
+    <div id="page3" class="page slide-out-right">
+        <div class="passport-header">
+            <div class="passport-title">Featured Projects</div>
+            <div class="passport-subtitle">Data Science Projects</div>
+        </div>
+        <div class="visa-stamp">SAMPLE PROJECTS</div>
+
+        
+        <div class="projects-grid">
+            <div class="project-item">
+                <div class="project-title">Online Course Details Analysis</div>
+                <div class="project-desc">
+                    ◦ Performed a detailed data cleaning, transformation, and pre-processing using Pandas for a data analysis project.<br>
+                    ◦ Explored and analyzed large datasets to uncover patterns, correlations, and trends using grouping, pivot tables, and statistical summaries.<br>
+                    ◦ Generated actionable insights through visual summaries using Pandas integration with Matplotlib and Seaborn
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">EDA on Olympic Dataset</div>
+                <div class="project-desc">
+                    ◦ Performed exploratory data analysis (EDA) on an Olympic racer dataset to uncover trends in athlete performance, participation, and medal distribution.<br>
+                    ◦ Used Pandas and NumPy for data cleaning, handling missing values, and feature extraction.<br>
+                    ◦ Performed statistical analysis and applied grouping, aggregation, and filtering to identify key patterns between countries and sports.
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">Heart Disease Prediction</div>
+                <div class="project-desc">
+                    ◦ Developed a machine learning model using Support Vector Machine (SVM) to predict the likelihood of heart disease based on clinical data.<br>
+                    ◦ Performed data pre-processing including handling missing values, encoding categorical variables, and feature scaling to prepare the dataset.<br>
+                    ◦ The SVM model was trained and evaluated using the split train-test and the performance was validated using accuracy, precision, recall, and the ROC curve.<br>
+                    ◦ Achieved 87 percentage accuracy showcasing effective classification performance on health-related datasets.
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">TELCO Customer Churn Analysis</div>
+                <div class="project-desc">
+                    ◦ Built a machine learning model using Random Forest algorithm to predict customer churn for a telecommunications company.<br>
+                    ◦ Preprocessed the dataset by handling missing values, encoding categorical features, and normalizing numerical variables.<br>
+                    ◦ Conducted exploratory data analysis (EDA) to identify key churn indicators such as contract type, tenure, and monthly charges.<br>
+                    ◦ Applied feature importance analysis to interpret the impact of variables on customer retention.
+                </div>
+            </div>
+        </div>
+<div class="suitcase" style="position: fixed; left: 15%; top: -50px; font-size: 30px; animation: slideDown 15s linear infinite; z-index: 2;">🧳</div>
+<div class="suitcase" style="position: fixed; right: 20%; top: -70px; font-size: 30px; animation: slideDown2 18s linear infinite; z-index: 2;">💼</div>
+        <div class="page-number">P003</div>
+    </div>
+    
+    <!-- Page 4: Web Dev Projects -->
+    <div id="page4" class="page slide-out-right">
+        <div class="passport-header">
+            <div class="passport-title">Featured Projects</div>
+            <div class="passport-subtitle">Web Dev Projects</div>
+        </div>
+
+        <div class="visa-stamp">SAMPLE PROJECTS</div>
+
+        
+        <div class="projects-grid">
+            <div class="project-item">
+                <div class="project-title">Edu-Tech Webpage</div>
+                <div class="project-desc">
+                    ◦ Designed and developed a responsive educational website using HTML, CSS, and JavaScript to provide course information, resources, and updates.<br>
+                    ◦ Implemented structured navigation, course sections, and a contact form to enhance user experience and accessibility.<br>
+                    ◦ Utilized Flexbox/Grid layout for clean and responsive design across devices.<br>
+                    ◦ Deployed the website using Netlify (https://codetriangle.netlify.app/)
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">Webpage for Wall Posters Business</div>
+                <div class="project-desc">
+                    ◦ Designed and developed a visually appealing wall posters e-commerce/catalog website using HTML, CSS, and JavaScript.<br>
+                    ◦ Created a responsive layout featuring poster categories, previews, and detailed product descriptions for a smooth browsing experience.<br>
+                    ◦ Added contact form and/or order inquiry section to simulate a real storefront experience.<br>
+                    ◦ Deployed the website using Github Pages (https://wall1gitrepo.github.io/WALLREST13/)
+                </div>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">Webpage for Home Bakery</div>
+                <div class="project-desc">
+                    ◦ Developed a machine learning model using Support Vector Machine (SVM) to predict the likelihood of heart disease based on clinical data.<br>
+                    ◦ Performed data pre-processing including handling missing values, encoding categorical variables, and feature scaling to prepare the dataset.<br>
+                    ◦ The SVM model was trained and evaluated using the split train-test and the performance was validated using accuracy, precision, recall, and the ROC curve.<br>
+                    ◦ Achieved 87 percentage accuracy showcasing effective classification performance on health-related datasets.
+                </div>
+            </div>
+        </div>
+        <div class="cloud" style="position: fixed; top: 10%; left: -100px; font-size: 80px; animation: cloudMove 30s linear infinite; z-index: 1; opacity: 0.7;">☁️</div>
+<div class="cloud" style="position: fixed; top: 30%; right: -100px; font-size: 100px; animation: cloudMove2 20s linear infinite; z-index: 1; opacity: 0.7;">☁️</div>
+        
+        <div class="page-number">P004</div>
+    </div>
+    
+    <!-- Page 5: Contact -->
+    <div id="page5" class="page slide-out-right">
+        <div class="passport-header">
+            <div class="passport-title">Contact Information</div>
+            <div class="passport-subtitle">Let's Connect</div>
+        </div>
+
+        <div class="visa-stamp">THANK YOU</div>
+
+        
+        <div class="contact-section">
+           <div class="contact-item">
+    <div class="contact-icon">📧</div>
+    <div class="contact-details">
+        <div class="contact-label">Email</div>
+        <a href="mailto:bharathramu1315@gmail.com" class="email-button">
+            Send Me an Email
+        </a>
+    </div>
+</div>
+            
+    <div class="contact-item">
+    <div class="contact-icon">📱</div>
+    <div class="contact-details">
+        <div class="contact-label">Mobile</div>
+        <a href="tel:+917305481510" class="call-button">
+            Call Me
+        </a>
+        <a href="https://wa.me/917305481510" target="_blank" rel="noopener noreferrer" class="whatsapp-button">
+            WhatsApp Me
+        </a>
+    </div>
+</div>
+            
+           <div class="contact-item">
+    <div class="contact-icon">💼</div>
+    <div class="contact-details">
+        <div class="contact-label">LinkedIn</div>
+        <a href="https://www.linkedin.com/in/bharath-ramamoorthy-6936b9251" target="_blank" rel="noopener noreferrer" class="linkedin-button">
+            View My LinkedIn Profile
+        </a>
+    </div>
+</div>
+            
+           <div class="contact-item">
+    <div class="contact-icon">🐙</div>
+    <div class="contact-details">
+        <div class="contact-label">GitHub</div>
+        <a href="https://github.com/bharathsgitrepo" target="_blank" rel="noopener noreferrer" class="github-button">
+            View My GitHub Profile
+        </a>
+    </div>
+</div>
+            
+         <div class="contact-item">
+    <div class="contact-icon">📍</div>
+    <div class="contact-details">
+        <div class="contact-label">Location</div>
+        <a href="https://www.google.com/maps/place/Chennai,+Tamil+Nadu" target="_blank" rel="noopener noreferrer" class="location-button">
+            View on Google Maps
+        </a>
+    </div>
+</div>
+        </div>
+
+        <div class="location-pin" style="position: fixed; top: 15%; left: 20%; font-size: 30px; animation: bounce 4s ease-in-out infinite; z-index: 2;">📍</div>
+<div class="location-pin" style="position: fixed; bottom: 25%; right: 25%; font-size: 30px; animation: bounce 5s ease-in-out infinite;  z-index: 2;">📍</div>
+        
+        <div class="page-number">P005</div>
+    </div>
+    
+    <!-- Navigation controls -->
+    <div class="page-indicators">
+        <div class="page-indicator active" data-page="1"></div>
+        <div class="page-indicator" data-page="2"></div>
+        <div class="page-indicator" data-page="3"></div>
+        <div class="page-indicator" data-page="4"></div>
+        <div class="page-indicator" data-page="5"></div>
+    </div>
+    
+    <div id="scrollIndicator">This is the beginning</div>
+    
+    <div class="navigation">
+        <button class="nav-button" onclick="navigateToPage(currentPage - 1)" disabled>Previous</button>
+        <button class="nav-button" onclick="navigateToPage(currentPage + 1)">Next</button>
+    </div>
+    
+    <script>
+        let currentPage = 1;
+        const totalPages = 5;
+        let isTransitioning = false;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartTime = 0;
+
+        function updateIndicators(page) {
+            document.querySelectorAll('.page-indicator').forEach((indicator, index) => {
+                if (index + 1 === page) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        function navigateToPage(pageNumber) {
+            if (pageNumber < 1 || pageNumber > totalPages || isTransitioning) return;
+            isTransitioning = true;
+
+            const transition = document.getElementById('pageTransition');
+            transition.style.display = 'flex';
+            transition.textContent = pageNumber > currentPage ? 'Next Page' : 'Previous Page';
+
+            setTimeout(() => {
+                const currentPageEl = document.getElementById(`page${currentPage}`);
+                const targetPageEl = document.getElementById(`page${pageNumber}`);
+                
+                // Set direction classes
+                if (pageNumber > currentPage) {
+                    currentPageEl.classList.remove('slide-in');
+                    currentPageEl.classList.add('slide-out-left');
+                    targetPageEl.classList.remove('slide-out-right');
+                } else {
+                    currentPageEl.classList.remove('slide-in');
+                    currentPageEl.classList.add('slide-out-right');
+                    targetPageEl.classList.remove('slide-out-left');
+                }
+                
+                targetPageEl.classList.add('slide-in');
+
+                // Update navigation buttons
+                document.querySelector('.nav-button:first-child').disabled = pageNumber === 1;
+                document.querySelector('.nav-button:last-child').disabled = pageNumber === totalPages;
+
+                currentPage = pageNumber;
+                updateIndicators(currentPage);
+
+                const indicator = document.getElementById('scrollIndicator');
+                if (currentPage === totalPages) {
+                    indicator.textContent = "You've reached the end";
+                } else if (currentPage === 1) {
+                    indicator.textContent = "This is the beginning";
+                } else {
+                    indicator.textContent = "Swipe or use arrow keys to navigate";
+                }
+
+                setTimeout(() => {
+                    transition.style.display = 'none';
+                    isTransitioning = false;
+                }, 300);
+            }, 300);
+        }
+
+        // Enhanced touch handling for mobile
+        document.addEventListener('touchstart', (e) => {
+            if (isTransitioning) return;
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartTime = Date.now();
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (isTransitioning) return;
+            touchEndX = e.changedTouches[0].screenX;
+            const touchDuration = Date.now() - touchStartTime;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            // Only trigger swipe if movement is significant and fast enough
+            if (Math.abs(swipeDistance) > 50 && touchDuration < 300) {
+                if (swipeDistance > 0 && currentPage > 1) {
+                    // Swipe right → previous page
+                    navigateToPage(currentPage - 1);
+                } else if (swipeDistance < 0 && currentPage < totalPages) {
+                    // Swipe left → next page
+                    navigateToPage(currentPage + 1);
+                }
+            }
+        }, { passive: true });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (isTransitioning) return;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                if (currentPage < totalPages) navigateToPage(currentPage + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                if (currentPage > 1) navigateToPage(currentPage - 1);
+            }
+        });
+
+        // Click on page indicators
+        document.querySelectorAll('.page-indicator').forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                const pageNumber = parseInt(indicator.dataset.page);
+                if (pageNumber !== currentPage) {
+                    navigateToPage(pageNumber);
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+            updateIndicators(currentPage);
+            
+            // Prevent zooming on mobile
+            document.addEventListener('gesturestart', (e) => {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
